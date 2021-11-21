@@ -1,0 +1,135 @@
+VS Code Plugins:
+----------------
+1. C# for Visual Studio Code (powered by OmniSharp)
+2. C# Extensions v1.5.2
+	by JosKreativ
+
+Remove unused using statements
+Ctrl + .
+
+Steps:
+=======	
+1. 
+create folder sohatnotebook
+create global.json by
+> dotnet new globaljson --sdk-version <<Version>> --force
+{
+  "sdk": {
+    "version": "5.0.402"
+  }
+}
+
+list of all available SDKs:
+> dotnet --info
+
+check the current version:
+> dotnet --version
+
+
+2. 
+dotnet new webapi -n SohatNotebook.Api
+
+cd SohatNotebook.Api
+
+code .
+
+click Yes for creating build & debug configuration files in vscode
+
+dotnet build
+
+remove weatherforecast controller & model file.
+
+dotnet build
+
+3.
+check the entity core version
+> dotnet ef --version
+
+> dotnet tool install --global dotnet-ef
+
+or for latest version use (works also for reinstallation):
+> dotnet tool update --global dotnet-ef
+or
+> dotnet tool update --global dotnet-ef --version 6.0.0
+
+Use command line, Cmd or PowerShell for specific version:
+> dotnet tool install --global dotnet-ef --version 6.0.0
+> dotnet tool install --global dotnet-ef --version 5.0.12
+
+ref:
+https://stackoverflow.com/questions/52108659/need-to-update-ef-core-tools
+
+4. add nuget.config under the project folder
+nuget.config 
+------------
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <clear />
+    <add key="NuGet Public" value="https://api.nuget.org/v3/index.json" />
+  </packageSources>   
+</configuration>
+
+5.
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite --version 5.0.12
+dotnet add package Microsoft.EntityFrameworkCore.Tools --version 5.0.12
+
+
+6.
+came out from SohatNotebook.Api folder
+cd..
+now pwd is: sohatnotebook
+
+create class library project for dataservice
+
+> dotnet new classlib -n SohatNotebook.DataService
+
+enter into SohatNotebook.DataService folder
+
+7. install required packageSources
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite --version 5.0.12
+dotnet add package Microsoft.EntityFrameworkCore.Tools --version 5.0.12
+dotnet add package Microsoft.EntityFrameworkCore.Design --version 5.0.12
+dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 5.0.12
+
+after adding
+
+check it with
+dotnet build
+
+8. 
+came out from SohatNotebook.DataService
+cd..
+now pwd is: sohatnotebook
+
+create class library project for entities ie, for dbset's
+
+dotnet new classlib -n SohatNotebook.Entities
+
+
+9.
+came out from SohatNotebook.DataService
+cd..
+now pwd is: sohatnotebook
+
+add reference for dataservice project to entities project
+
+> dotnet add SohatNotebook.DataService/SohatNotebook.DataService.csproj reference SohatNotebook.Entities/SohatNotebook.Entities.csproj
+
+add reference for api project to dataservice project
+
+dotnet add SohatNotebook.Api/SohatNotebook.Api.csproj reference SohatNotebook.DataService/SohatNotebook.DataService.csproj
+
+10.
+from sohatnotebook\SohatNotebook.DataService>
+> dotnet ef migrations add "initial migration" --startup-project ../SohatNotebook.Api
+
+ensure the startup project have the efcore design package or add it by following line:
+> dotnet add package Microsoft.EntityFrameworkCore.Design --version 5.0.12
+
+
+dotnet ef database update --startup-project ../SohatNotebook.Api
+
+
+
+
