@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using SohatNotebook.DataService.Data;
+using SohatNotebook.DataService.IConfiguration;
 
 namespace SohatNotebook.Api
 {
@@ -31,10 +32,21 @@ namespace SohatNotebook.Api
             services.AddDbContext<AppDbContext>(options => 
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"))
             );
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SohatNotebook.Api", Version = "v1" });
+            });
+
+            services.AddApiVersioning(opt => {
+                //Provides different Api versions to the client that we have
+                opt.ReportApiVersions = true;
+                // this will allow the api to automatically provide a default version
+                opt.AssumeDefaultVersionWhenUnspecified = true;
+                opt.DefaultApiVersion = ApiVersion.Default;
             });
         }
 

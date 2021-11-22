@@ -4,38 +4,34 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SohatNotebook.DataService.Data;
+using SohatNotebook.DataService.IConfiguration;
 using SohatNotebook.Entities.DbSet;
 using SohatNotebook.Entities.Dtos.Incoming;
 
-namespace SohatNotebook.Api.Controllers 
+namespace SohatNotebook.Api.Controllers.v1 
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseController
     {
-        private AppDbContext _context;
-
-        public UsersController(AppDbContext context)
-        {
-            _context = context;
-        }
+        public UsersController(IUnitOfWork unitOfWork) : base(unitOfWork)
+        {}
 
         [HttpGet]
-        public IActionResult GetUsers()
+        public async Task<IActionResult> GetUsers()
         {
-            var users = _context.Users.Where(x => x.Status == 1).ToList();
+            var users = await _unitOfWork.Users.All();
             return Ok(users);
         }
 
-        [HttpGet("GetUser")]
-        public IActionResult GetUser(Guid id)
+        [HttpGet]
+        [Route("GetUser", Name = "GetUser")]
+        public async Task<IActionResult> GetUser(Guid id)
         {
-            var user = _context.Users.FirstOrDefault(x => x.Id == id);
+            var user = await _unitOfWork.Users.GetById(id);
             return Ok(user);
         }
 
         [HttpPost]
-        public IActionResult AddUser(UserDto user)
+        public async Task<IActionResult> AddUser(UserDto user)
         {
             var _user = new User()
             {
@@ -47,9 +43,9 @@ namespace SohatNotebook.Api.Controllers
                 Country = user.Country,
                 DateOfBirth = Convert.ToDateTime(user.DateOfBirth),
             };
-            _context.Users.Add(_user);
-            _context.SaveChanges();
-            return Ok();    // we should return 201, but now we return 200
+            await _unitOfWork.Users.Add(_user);
+            await _unitOfWork.CompleteAsync();
+            return CreatedAtRoute("GetUser", new { id = _user.Id}, user);
         }
 
     }
