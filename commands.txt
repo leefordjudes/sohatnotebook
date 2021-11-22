@@ -133,3 +133,4 @@ dotnet ef database update --startup-project ../SohatNotebook.Api
 
 
 
+Time: 1:00:40
