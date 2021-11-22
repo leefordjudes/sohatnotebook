@@ -10,17 +10,10 @@ using SohatNotebook.Entities.Dtos.Incoming;
 
 namespace SohatNotebook.Api.Controllers.v1 
 {
-    [Route("api/v{version:apiVersion}/[controller]")]
-    [ApiController]
-    [ApiVersion("1.0")]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseController
     {
-        private IUnitOfWork _unitOfWork;
-
-        public UsersController(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
+        public UsersController(IUnitOfWork unitOfWork) : base(unitOfWork)
+        {}
 
         [HttpGet]
         public async Task<IActionResult> GetUsers()
