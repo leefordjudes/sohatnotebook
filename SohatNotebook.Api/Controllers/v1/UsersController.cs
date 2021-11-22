@@ -8,10 +8,11 @@ using SohatNotebook.DataService.IConfiguration;
 using SohatNotebook.Entities.DbSet;
 using SohatNotebook.Entities.Dtos.Incoming;
 
-namespace SohatNotebook.Api.Controllers 
+namespace SohatNotebook.Api.Controllers.v1 
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class UsersController : ControllerBase
     {
         private IUnitOfWork _unitOfWork;
