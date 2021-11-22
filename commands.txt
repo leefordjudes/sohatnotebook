@@ -130,7 +130,4 @@ ensure the startup project have the efcore design package or add it by following
 
 dotnet ef database update --startup-project ../SohatNotebook.Api
 
-
-
-
-Time: 1:00:40
+dotnet add package Microsoft.AspNetCore.Mvc.Versioning --version 5.0.0
