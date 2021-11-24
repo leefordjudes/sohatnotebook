@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SohatNotebook.DataService.Data;
 using SohatNotebook.DataService.IConfiguration;
@@ -10,6 +12,7 @@ using SohatNotebook.Entities.Dtos.Incoming;
 
 namespace SohatNotebook.Api.Controllers.v1 
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UsersController : BaseController
     {
         public UsersController(IUnitOfWork unitOfWork) : base(unitOfWork)
@@ -26,6 +29,7 @@ namespace SohatNotebook.Api.Controllers.v1
         [Route("GetUser", Name = "GetUser")]
         public async Task<IActionResult> GetUser(Guid id)
         {
+            Console.WriteLine("userid: {0}", id);
             var user = await _unitOfWork.Users.GetById(id);
             return Ok(user);
         }

@@ -1,17 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SohatNotebook.Authentication.Configuration;
 using SohatNotebook.DataService.Data;
 using SohatNotebook.DataService.IConfiguration;
 
@@ -29,6 +34,10 @@ namespace SohatNotebook.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Update the JWT confit from the app settings
+            services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
+            // services.Configure<JwtConfig>(Configuration);
+
             services.AddDbContext<AppDbContext>(options => 
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"))
             );
@@ -48,6 +57,30 @@ namespace SohatNotebook.Api
                 opt.AssumeDefaultVersionWhenUnspecified = true;
                 opt.DefaultApiVersion = ApiVersion.Default;
             });
+
+            services.AddAuthentication(options => {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(jwt => {
+                // Getting the secret from the config
+                var key = Encoding.ASCII.GetBytes(Configuration["JwtConfig:Secret"]);
+                Console.WriteLine("Key: {0}", Configuration["JwtConfig:Secret"]);
+                jwt.SaveToken = true;
+                jwt.TokenValidationParameters = new TokenValidationParameters {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false, // Todo Update
+                    ValidateAudience = false,  // Todo Update
+                    RequireExpirationTime = false,  // Todo Update
+                    ValidateLifetime = true,
+                };
+            });
+
+            services.AddDefaultIdentity<IdentityUser>(options => {
+                options.SignIn.RequireConfirmedAccount = true;
+            }).AddEntityFrameworkStores<AppDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,6 +97,7 @@ namespace SohatNotebook.Api
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
