@@ -118,7 +118,7 @@ add reference for dataservice project to entities project
 
 add reference for api project to dataservice project
 
-dotnet add SohatNotebook.Api/SohatNotebook.Api.csproj reference SohatNotebook.DataService/SohatNotebook.DataService.csproj
+> dotnet add SohatNotebook.Api/SohatNotebook.Api.csproj reference SohatNotebook.DataService/SohatNotebook.DataService.csproj
 
 10.
 from sohatnotebook\SohatNotebook.DataService>
@@ -128,6 +128,33 @@ ensure the startup project have the efcore design package or add it by following
 > dotnet add package Microsoft.EntityFrameworkCore.Design --version 5.0.12
 
 
-dotnet ef database update --startup-project ../SohatNotebook.Api
+> dotnet ef database update --startup-project ../SohatNotebook.Api
 
-dotnet add package Microsoft.AspNetCore.Mvc.Versioning --version 5.0.0
+> dotnet add package Microsoft.AspNetCore.Mvc.Versioning --version 5.0.0
+
+EP3:
+Adding Authentication and Authorization
+---------------------------------------
+1. Add following packages in SohatNotebook.Api
+> dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer --version 5.0.12
+> dotnet add package Microsoft.AspNetCore.Identity.UI --version 5.0.12
+
+2. add section in appsettings.json in SohatNotebook.Api
+  "JwtConfig":{
+    "Secret":"this is my jwt key for this demo"
+  }
+3. you can store your secret in your system instead of appsettings.json
+dotnet add user-setting JwtConfig:Secret "some jwt secret key"  
+
+4.
+change folder to sohatnotebook, 
+create a classlib for Authentication and reference to api with Authentication
+
+> dotnet new classlib -n SohatNotebook.Authentication
+
+> dotnet add SohatNotebook.Api/SohatNotebook.Api.csproj reference SohatNotebook.Authentication/SohatNotebook.Authentication.csproj
+
+Add migration from SohatNotebook.DataService project
+> dotnet ef migrations add "Add identityId to the users" --startup-project ../SohatNotebook.Api
+> dotnet ef database update --startup-project ../SohatNotebook.Api
+

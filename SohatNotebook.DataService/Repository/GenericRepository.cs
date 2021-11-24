@@ -38,6 +38,7 @@ namespace SohatNotebook.DataService.Repository
 
         public virtual async Task<T> GetById(Guid id)
         {
+            Console.WriteLine("gen repo id: {0}", id);
             return await dbSet.FindAsync(id);
         }
 
