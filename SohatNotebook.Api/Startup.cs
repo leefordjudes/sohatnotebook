@@ -58,24 +58,31 @@ namespace SohatNotebook.Api
                 opt.DefaultApiVersion = ApiVersion.Default;
             });
 
+            // Getting the secret from the config
+            var key = Encoding.ASCII.GetBytes(Configuration["JwtConfig:Secret"]);
+            Console.WriteLine("Key: {0}", Configuration["JwtConfig:Secret"]);
+
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false, // Todo Update
+                ValidateAudience = false,  // Todo Update
+                RequireExpirationTime = false,  // Todo Update
+                ValidateLifetime = true,
+            };
+            
+            // Injecting into our DI container
+            services.AddSingleton(tokenValidationParameters);
+
             services.AddAuthentication(options => {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(jwt => {
-                // Getting the secret from the config
-                var key = Encoding.ASCII.GetBytes(Configuration["JwtConfig:Secret"]);
-                Console.WriteLine("Key: {0}", Configuration["JwtConfig:Secret"]);
                 jwt.SaveToken = true;
-                jwt.TokenValidationParameters = new TokenValidationParameters {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false, // Todo Update
-                    ValidateAudience = false,  // Todo Update
-                    RequireExpirationTime = false,  // Todo Update
-                    ValidateLifetime = true,
-                };
+                jwt.TokenValidationParameters = tokenValidationParameters;
             });
 
             services.AddDefaultIdentity<IdentityUser>(options => {

@@ -158,3 +158,9 @@ Add migration from SohatNotebook.DataService project
 > dotnet ef migrations add "Add identityId to the users" --startup-project ../SohatNotebook.Api
 > dotnet ef database update --startup-project ../SohatNotebook.Api
 
+Add package in SohatNotebook.Entities
+> dotnet add package Microsoft.AspNetCore.Identity.UI --version 5.0.12
+
+Add migration from SohatNotebook.DataService project
+> dotnet ef migrations add "Adding refresh tokens" --startup-project ../SohatNotebook.Api
+> dotnet ef database update --startup-project ../SohatNotebook.Api
