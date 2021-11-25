@@ -28,5 +28,45 @@ namespace SohatNotebook.DataService.Repository
                 return new List<User>();
             }
         }
+
+        public async Task<bool> UpdateUserProfile(User user)
+        {
+            try
+            {
+                var existingUser = await dbSet.Where(x => x.Status == 1 && x.Id == user.Id).FirstOrDefaultAsync();
+                if(existingUser == null) return false;
+
+                existingUser.FirstName = user.FirstName;
+                existingUser.LastName = user.LastName;
+                existingUser.MobileNumber = user.MobileNumber;
+                existingUser.Phone = user.Phone;
+                existingUser.Sex = user.Sex;
+                existingUser.Address = user.Address;
+                existingUser.UpdateDate = DateTime.UtcNow;
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _loger.LogError(ex, "{Repo} UpdateUserProfile method has generated an error", typeof(UsersRepository));
+                return false;
+            }
+        }
+
+        public async Task<User> GetByIdentityId(Guid identityId)
+        {
+            try
+            {
+                return await dbSet.Where(x => x.Status == 1 && x.IdentityId == identityId)
+                                .AsNoTracking()
+                                .FirstOrDefaultAsync();
+
+            }
+            catch (Exception ex)
+            {
+                _loger.LogError(ex, "{Repo} GetByIdentityId method has generated an error", typeof(UsersRepository));
+                return null;
+            }
+        }
     }
 }

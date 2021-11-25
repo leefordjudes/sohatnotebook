@@ -164,3 +164,10 @@ Add package in SohatNotebook.Entities
 Add migration from SohatNotebook.DataService project
 > dotnet ef migrations add "Adding refresh tokens" --startup-project ../SohatNotebook.Api
 > dotnet ef database update --startup-project ../SohatNotebook.Api
+
+after adding Address, MobileNumber, Sex in User class in data service project
+Add migration from SohatNotebook.DataService project
+> dotnet ef migrations add "Update user information" --startup-project ../SohatNotebook.Api
+> dotnet ef database update --startup-project ../SohatNotebook.Api
+
+Time: 5.Building an API - Utilising JWT Tokens - 00.34.00min
