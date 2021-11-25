@@ -20,15 +20,13 @@ namespace SohatNotebook.Api.Controllers.v1
 {
     public class AccountsController : BaseController
     {
-        // Class provided by AspNetCore Identity Framework
-        private readonly UserManager<IdentityUser> _userManager;
         private readonly TokenValidationParameters _tokenValidationParameters;
         private readonly JwtConfig _jwtConfig;
         public AccountsController(
             IUnitOfWork unitOfWork,
             UserManager<IdentityUser> userManager,
             TokenValidationParameters tokenValidationParameters,
-            IOptionsMonitor<JwtConfig> optionMonitor) : base(unitOfWork)
+            IOptionsMonitor<JwtConfig> optionMonitor) : base(unitOfWork, userManager)
         {
             _userManager = userManager;
             _jwtConfig = optionMonitor.CurrentValue;
@@ -182,6 +180,7 @@ namespace SohatNotebook.Api.Controllers.v1
             var tokenDescriptor = new SecurityTokenDescriptor {
                 Subject = new ClaimsIdentity(new [] {
                     new Claim("Id", user.Id),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id),
                     new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
