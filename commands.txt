@@ -170,4 +170,29 @@ Add migration from SohatNotebook.DataService project
 > dotnet ef migrations add "Update user information" --startup-project ../SohatNotebook.Api
 > dotnet ef database update --startup-project ../SohatNotebook.Api
 
-Time: 5.Building an API - Utilising JWT Tokens - 00.34.00min
+download dotnet from: 
+https://github.com/dotnet/core/blob/main/release-notes/6.0/6.0.0/6.0.0.md
+https://dotnet.microsoft.com/download/dotnet
+
+visual studio sdk support
+https://dotnet.microsoft.com/download/visual-studio-sdks
+
+Upgrade .Net 5 to .Net 6
+Ref: https://docs.microsoft.com/en-us/aspnet/core/migration/50-to-60?view=aspnetcore-6.0&tabs=visual-studio-code
+
+step 1:
+update global.json sdk to installed .Net 6 version, or remove the global.json, automatically installed .Net 6 version is default
+
+{
+  "sdk": {
+    "version": "6.0.100"
+  }
+}
+
+step 2:
+change the target framework to net6.0 in all .csproj file
+step 3:
+change the package reference in csproj files as per .net 6,
+after that run
+> dotnet restore
+

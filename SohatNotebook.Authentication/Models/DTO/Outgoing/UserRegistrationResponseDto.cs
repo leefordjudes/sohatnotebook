@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SohatNotebook.Authentication.Models.DTO.Outgoing
+namespace SohatNotebook.Authentication.Models.DTO.Outgoing;
+
+public class UserRegistrationResponseDto : AuthResult
 {
-    public class UserRegistrationResponseDto : AuthResult
-    {
-        
-    }
+
 }

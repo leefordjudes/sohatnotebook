@@ -8,63 +8,62 @@ using SohatNotebook.DataService.Data;
 using SohatNotebook.DataService.IRepository;
 using SohatNotebook.Entities.DbSet;
 
-namespace SohatNotebook.DataService.Repository
+namespace SohatNotebook.DataService.Repository;
+
+public class RefreshTokensRepository : GenericRepository<RefreshToken>, IRefreshTokensRepository
 {
-    public class RefreshTokensRepository : GenericRepository<RefreshToken>, IRefreshTokensRepository
+    public RefreshTokensRepository(
+        AppDbContext context,
+        ILogger logger
+    ) : base(context, logger)
     {
-        public RefreshTokensRepository(
-            AppDbContext context,
-            ILogger logger
-        ) : base (context, logger)
-        {
-        }
+    }
 
-        public override async Task<IEnumerable<RefreshToken>> All()
+    public override async Task<IEnumerable<RefreshToken>> All()
+    {
+        try
         {
-            try
-            {
-                return await dbSet.Where(x => x.Status == 1)
-                                .AsNoTracking()
-                                .ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                _loger.LogError(ex, "{Repo} All method has generated an error", typeof(RefreshTokensRepository));
-                return new List<RefreshToken>();
-            }
+            return await dbSet.Where(x => x.Status == 1)
+                            .AsNoTracking()
+                            .ToListAsync();
         }
-
-        public async Task<RefreshToken> GetByRefreshToken(string refreshToken)
+        catch (Exception ex)
         {
-            try
-            {
-                return await dbSet.Where(x => x.Token.ToLower() == refreshToken.ToLower())
-                                .AsNoTracking()
-                                .FirstOrDefaultAsync();
-            }
-            catch (Exception ex)
-            {
-                _loger.LogError(ex, "{Repo} GetByRefreshToken method has generated an error", typeof(RefreshTokensRepository));
-                return null;
-            }
+            _loger.LogError(ex, "{Repo} All method has generated an error", typeof(RefreshTokensRepository));
+            return new List<RefreshToken>();
         }
+    }
 
-        public async Task<bool> MarkRefreshTokenAsUsed(RefreshToken refreshToken)
+    public async Task<RefreshToken> GetByRefreshToken(string refreshToken)
+    {
+        try
         {
-            try
-            {
-                var token = await dbSet.Where(x => x.Token.ToLower() == refreshToken.Token.ToLower())
-                                .AsNoTracking()
-                                .FirstOrDefaultAsync();
-                if (token == null) return false;
-                token.IsUsed = refreshToken.IsUsed;
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _loger.LogError(ex, "{Repo} MarkRefreshTokenAsUsed method has generated an error", typeof(RefreshTokensRepository));
-                return false;
-            }
+            return await dbSet.Where(x => x.Token.ToLower() == refreshToken.ToLower())
+                            .AsNoTracking()
+                            .FirstOrDefaultAsync();
+        }
+        catch (Exception ex)
+        {
+            _loger.LogError(ex, "{Repo} GetByRefreshToken method has generated an error", typeof(RefreshTokensRepository));
+            return null;
+        }
+    }
+
+    public async Task<bool> MarkRefreshTokenAsUsed(RefreshToken refreshToken)
+    {
+        try
+        {
+            var token = await dbSet.Where(x => x.Token.ToLower() == refreshToken.Token.ToLower())
+                            .AsNoTracking()
+                            .FirstOrDefaultAsync();
+            if (token == null) return false;
+            token.IsUsed = refreshToken.IsUsed;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _loger.LogError(ex, "{Repo} MarkRefreshTokenAsUsed method has generated an error", typeof(RefreshTokensRepository));
+            return false;
         }
     }
 }
