@@ -11,49 +11,48 @@ using SohatNotebook.DataService.IConfiguration;
 using SohatNotebook.Entities.DbSet;
 using SohatNotebook.Entities.Dtos.Incoming;
 
-namespace SohatNotebook.Api.Controllers.v1 
+namespace SohatNotebook.Api.Controllers.v1;
+
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+public class UsersController : BaseController
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class UsersController : BaseController
+    public UsersController(
+        IUnitOfWork unitOfWork,
+        UserManager<IdentityUser> userManager) : base(unitOfWork, userManager)
+    { }
+
+    [HttpGet]
+    public async Task<IActionResult> GetUsers()
     {
-        public UsersController(
-            IUnitOfWork unitOfWork,
-            UserManager<IdentityUser> userManager) : base(unitOfWork, userManager)
-        {}
-
-        [HttpGet]
-        public async Task<IActionResult> GetUsers()
-        {
-            var users = await _unitOfWork.Users.All();
-            return Ok(users);
-        }
-
-        [HttpGet]
-        [Route("GetUser", Name = "GetUser")]
-        public async Task<IActionResult> GetUser(Guid id)
-        {
-            Console.WriteLine("userid: {0}", id);
-            var user = await _unitOfWork.Users.GetById(id);
-            return Ok(user);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddUser(UserDto user)
-        {
-            var _user = new User()
-            {
-                Status = 1,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                Phone = user.Phone,
-                Country = user.Country,
-                DateOfBirth = Convert.ToDateTime(user.DateOfBirth),
-            };
-            await _unitOfWork.Users.Add(_user);
-            await _unitOfWork.CompleteAsync();
-            return CreatedAtRoute("GetUser", new { id = _user.Id}, user);
-        }
-
+        var users = await _unitOfWork.Users.All();
+        return Ok(users);
     }
+
+    [HttpGet]
+    [Route("GetUser", Name = "GetUser")]
+    public async Task<IActionResult> GetUser(Guid id)
+    {
+        Console.WriteLine("userid: {0}", id);
+        var user = await _unitOfWork.Users.GetById(id);
+        return Ok(user);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddUser(UserDto user)
+    {
+        var _user = new User()
+        {
+            Status = 1,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email = user.Email,
+            Phone = user.Phone,
+            Country = user.Country,
+            DateOfBirth = Convert.ToDateTime(user.DateOfBirth),
+        };
+        await _unitOfWork.Users.Add(_user);
+        await _unitOfWork.CompleteAsync();
+        return CreatedAtRoute("GetUser", new { id = _user.Id }, user);
+    }
+
 }

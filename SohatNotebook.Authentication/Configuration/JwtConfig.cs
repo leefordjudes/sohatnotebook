@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SohatNotebook.Authentication.Configuration
+namespace SohatNotebook.Authentication.Configuration;
+
+public class JwtConfig
 {
-    public class JwtConfig
-    {
-        public string Secret { get; set; }
-        public TimeSpan ExpiryTimeFrame {get;set;}
-    }
+    public string Secret { get; set; }
+    public TimeSpan ExpiryTimeFrame { get; set; }
 }
