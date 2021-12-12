@@ -7,6 +7,20 @@ VS Code Plugins:
 Remove unused using statements
 Ctrl + .
 
+dotnet publish -c Release --self-contained false
+
+Build Project:
+--------------
+> dotnet build
+
+Run Project:
+------------
+> dotnet run
+
+Run Project in watch mode:
+--------------------------
+> dotnet watch run
+
 Steps:
 =======	
 1. 
@@ -196,3 +210,7 @@ change the package reference in csproj files as per .net 6,
 after that run
 > dotnet restore
 
+> dotnet new classlib -n SohatNotebook.Configuration
+> dotnet add SohatNotebook.Api/SohatNotebook.Api.csproj reference SohatNotebook.Configuration/SohatNotebook.Configuration.csproj
+
+Time: 00.52.30 min

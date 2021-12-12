@@ -1,0 +1,96 @@
+sohat note book api
+https://localhost:5010/api/v1/accounts/register
+{
+    "FirstName":"Anto",
+    "LastName": "Jude",
+    "Email":"aj@email.com",
+    "Password":"Pass@123"
+}
+---
+{
+    "FirstName":"Tony",
+    "LastName": "des",
+    "Email":"td@email.com",
+    "Password":"Pass@123"
+}
+---
+{
+    "FirstName":"Goofy",
+    "LastName": "Disney",
+    "Email":"goofy@email.com",
+    "Password":"Pass@123"
+}
+
+POST https://localhost:5010/api/v1/accounts/login
+{
+    "Email":"goofy@email.com",
+    "Password":"Pass@123"
+}
+{
+	"token": "xxxxxx",
+	"refreshToken": "JNOZFW06XGU7916CPAFUJ4ZAS_177dce30-0122-420e-bd00-5c3d48e8b4b7",
+    "success": true,
+    "errors": null
+}
+
+POST https://localhost:5010/api/v1/accounts/refreshtoken
+   { 
+    "token": "xxxxxx",
+    "refreshToken": "H94WC689ADIC1XS3R5D42LQP3_a932c5aa-5247-4062-a50f-31538fca248c"
+    }
+
+GET https://localhost:5010/api/v1/Users
+- token
+[
+    {
+        "identityId": "00000000-0000-0000-0000-000000000000",
+        "firstName": "Antony",
+        "lastName": "Judes",
+        "email": "judes@email.com",
+        "phone": "9876543210",
+        "dateOfBirth": "1987-12-25T00:00:00",
+        "country": "India",
+        "address": null,
+        "mobileNumber": null,
+        "sex": null,
+        "id": "aa8ba600-e903-46ff-bce9-ecc1e8e85706",
+        "status": 1,
+        "addedDate": "2021-11-21T12:44:47.5309342",
+        "updateDate": "0001-01-01T00:00:00"
+    },
+]
+
+GET https://localhost:5010/api/v1/Users/GetUser?
+id=A2E8E5B9-C5DE-4D3E-9DCB-32935A72B936
+
+- token
+
+{
+    "identityId": "da219996-c785-4538-a17b-ed3f2f93ccad",
+    "firstName": "Tony",
+    "lastName": "des",
+    "email": "td@email.com",
+    "phone": "",
+    "dateOfBirth": "2021-11-23T17:11:21.3876735",
+    "country": "",
+    "address": null,
+    "mobileNumber": null,
+    "sex": null,
+    "id": "a2e8e5b9-c5de-4d3e-9dcb-32935a72b936",
+    "status": 1,
+    "addedDate": "2021-11-23T17:11:21.3874599",
+    "updateDate": "0001-01-01T00:00:00"
+}
+
+PUT https://localhost:5010/api/v1/Profile
+- token
+body:
+{
+    "country":"India",
+    "address":"addr",
+    "mobilenumber":"9876543111",
+    "sex":"male"
+}
+
+GET https://localhost:5010/api/v1/Profile
+- token
