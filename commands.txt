@@ -7,6 +7,20 @@ VS Code Plugins:
 Remove unused using statements
 Ctrl + .
 
+dotnet publish -c Release --self-contained false
+
+Build Project:
+--------------
+> dotnet build
+
+Run Project:
+------------
+> dotnet run
+
+Run Project in watch mode:
+--------------------------
+> dotnet watch run
+
 Steps:
 =======	
 1. 
@@ -196,3 +210,39 @@ change the package reference in csproj files as per .net 6,
 after that run
 > dotnet restore
 
+EP7
+====
+Add Class library Project for General & Specific Errors
+-------------------------------------------------------
+> dotnet new classlib -n SohatNotebook.Configuration
+> dotnet add SohatNotebook.Api/SohatNotebook.Api.csproj reference SohatNotebook.Configuration/SohatNotebook.Configuration.csproj
+
+Add AutoMapper
+--------------
+> dotnet add package AutoMapper --version 10.1.1
+> dotnet add package AutoMapper.Extensions.Microsoft.DependencyInjection --version 8.1.1
+
+Add HealthData class in DbSet folder of SohatNotebook.Entities project,
+Add HealthData as DbSet in AppDbContext of SohatNotebook.DataService\Data
+
+after Health Data class in data service project
+Add migration from SohatNotebook.DataService project
+
+> dotnet ef migrations add "Adding health data table" --startup-project ../SohatNotebook.Api
+> dotnet ef database update --startup-project ../SohatNotebook.Api
+
+For any issues refer:
+https://docs.microsoft.com/en-us/ef/core/cli/dotnet
+to install dotnet ef tools, use the following command:
+> dotnet tool install --global dotnet-ef
+
+to reinstall dotnet ef tools, use the following:
+❯ dotnet tool update --global dotnet-ef
+
+Steps to Add HealthData
+  1. Add HealthData class under Entities.DbSet
+  2. Add HealthData as a DbSet in AppDbContext under SohatNotebook.DataService.Data
+  2. Add IHealthDataRepository interface under SohatNotebook.DataService.IRepository
+  3. Add HealthDataRepository class under SohatNotebook.DataService.Repository
+  4. Add IHealthDataRepository as a part of IUnitOfWork interface under SohatNotebook.DataService.IConfiguration
+  5. Add IHealthDataRepository as a public part of UnitOfWork class under SohatNotebook.DataService.Data and add it within its constructor also.
