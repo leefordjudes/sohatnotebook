@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -23,10 +24,11 @@ public class AccountsController : BaseController
     private readonly TokenValidationParameters _tokenValidationParameters;
     private readonly JwtConfig _jwtConfig;
     public AccountsController(
+        IMapper mapper,
         IUnitOfWork unitOfWork,
         UserManager<IdentityUser> userManager,
         TokenValidationParameters tokenValidationParameters,
-        IOptionsMonitor<JwtConfig> optionMonitor) : base(unitOfWork, userManager)
+        IOptionsMonitor<JwtConfig> optionMonitor) : base(mapper, unitOfWork, userManager)
     {
         _userManager = userManager;
         _jwtConfig = optionMonitor.CurrentValue;
