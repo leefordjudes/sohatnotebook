@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SohatNotebook.DataService\SohatNotebook.DataService.csproj" />
     <ProjectReference Include="..\SohatNotebook.Authentication\SohatNotebook.Authentication.csproj" />
+    <ProjectReference Include="..\SohatNotebook.Configuration\SohatNotebook.Configuration.csproj" />
   </ItemGroup>
 
 </Project>

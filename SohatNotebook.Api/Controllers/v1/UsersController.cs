@@ -9,7 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using SohatNotebook.DataService.Data;
 using SohatNotebook.DataService.IConfiguration;
 using SohatNotebook.Entities.DbSet;
+using SohatNotebook.Entities.Dtos.Generic;
 using SohatNotebook.Entities.Dtos.Incoming;
+using SohatNotebook.Configuration.Messages;
 
 namespace SohatNotebook.Api.Controllers.v1;
 
@@ -25,16 +27,28 @@ public class UsersController : BaseController
     public async Task<IActionResult> GetUsers()
     {
         var users = await _unitOfWork.Users.All();
-        return Ok(users);
+        var result = new PagedResult<User>();
+        result.Page = 1;
+        result.Content = users.ToList();
+        result.ResultCount = users.Count();
+        return Ok(result);
     }
 
     [HttpGet]
     [Route("GetUser", Name = "GetUser")]
     public async Task<IActionResult> GetUser(Guid id)
     {
-        Console.WriteLine("userid: {0}", id);
         var user = await _unitOfWork.Users.GetById(id);
-        return Ok(user);
+        var result = new Result<User>();
+        if (user != null)
+        {
+            result.Content = user;
+            return Ok(user);
+        }
+        result.Error = PopulateError(404, 
+                            ErrorMessages.User.NotFound, 
+                            ErrorMessages.Generic.NotFound);
+        return NotFound(result);
     }
 
     [HttpPost]
